@@ -116,7 +116,7 @@ void run_experiment(int guess_size) {
 
 }
 
-int main(int argc,m char* argv) {
+int main(int argc, char* argv[]) {
 
 	init_array();
 

@@ -4,8 +4,8 @@
 #include <sys/time.h>
 
 // 256k
-#define BUF_SIZE 1024 * 1024
-#define NUM_RUNS 3000
+#define BUF_SIZE 1024 * 256
+#define NUM_RUNS 10000
 
 // buf for clearing
 uint8_t cbuf[BUF_SIZE];
@@ -35,33 +35,43 @@ int main(int argc, char *argv[]) {
 	printf("Using cache size of %d KB\n", cache_sz_kb);
 
 
-	for (int assoc = 2; assoc < 16; assoc++) {
-		double sum_nonassoc = 0;
-		double sum_assoc = 0;
+	for (int assoc = 2; assoc <= 8; assoc++) {
+		double sum_evict = 0;
+		double sum_base = 0;
 
 		for (int run = 0; run < NUM_RUNS; run++) {
 			clear();
 
 			for (int i = 0; i <= assoc; i++) {
-				uint32_t start = utime();
 				uint8_t byte = tbuf[i * cache_sz_kb * 1024];
-				uint32_t end = utime();
-
-				if (i == assoc) sum_assoc += end - start;
-				else if (i == assoc-1) sum_nonassoc += end - start;
 			}
+
+			uint8_t byte;
+			uint32_t start;
+			uint32_t end;
+
+			// baseline
+			int base = assoc*cache_sz_kb*1024;
+			start = utime();
+			byte = tbuf[base];
+			end = utime();
+
+			sum_base += end - start;
+
+			// evict
+			start = utime();
+			byte = tbuf[0];
+			end = utime();
+
+			sum_evict += end - start;
 		}
 
-		double avg_nonassoc = sum_nonassoc / NUM_RUNS;
-		double avg_assoc = sum_assoc / NUM_RUNS;
+		double avg_evict = sum_evict / NUM_RUNS;
+		double avg_base = sum_base / NUM_RUNS;
 
 		printf("==============================\n");
 		printf("Results for Associativity %d\n", assoc);
-		printf("Time for miss which maps to same set: %f\n", avg_nonassoc);
-		printf(
-			"Time for miss which *would* require the set to remove an item: "
-			"%f\n\n",
-			avg_assoc
-		);
+		printf("eviction time: %f\n", avg_evict);
+		printf("baseline for comparison: %f\n\n", avg_base);
 	}
 }

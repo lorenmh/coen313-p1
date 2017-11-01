@@ -5,7 +5,7 @@
 
 // 256k
 #define BUF_SIZE 1024 * 256
-#define NUM_RUNS 10000
+#define NUM_RUNS 20000
 
 // buf for clearing
 uint8_t cbuf[BUF_SIZE];

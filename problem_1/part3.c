@@ -5,7 +5,7 @@
 
 // 256k
 #define BUF_SIZE 1024 * 256
-#define NUM_RUNS 20000
+#define NUM_RUNS 10000
 
 // buf for clearing
 uint8_t cbuf[BUF_SIZE];
@@ -21,7 +21,7 @@ void clear() {
 uint32_t utime() {
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
-	return 1000000 * tv.tv_sec + tv.tv_usec;
+	return 1000000*(tv.tv_sec % 5) + tv.tv_usec;
 }
 
 int main(int argc, char *argv[]) {

@@ -5,7 +5,7 @@
 
 // 256k
 #define BUF_SIZE 1024 * 1024
-#define NUM_RUNS 1000
+#define NUM_RUNS 3000
 
 // buf for clearing
 uint8_t cbuf[BUF_SIZE];
@@ -48,11 +48,11 @@ int main(int argc, char *argv[]) {
 				uint32_t end = utime();
 
 				if (i == assoc) sum_assoc += end - start;
-				else sum_nonassoc += end - start;
+				else if (i == assoc-1) sum_nonassoc += end - start;
 			}
 		}
 
-		double avg_nonassoc = sum_nonassoc / (assoc * NUM_RUNS);
+		double avg_nonassoc = sum_nonassoc / NUM_RUNS;
 		double avg_assoc = sum_assoc / NUM_RUNS;
 
 		printf("==============================\n");

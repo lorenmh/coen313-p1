@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define SIZE 3
+#define SIZE 1024
 
 int matrix1[SIZE][SIZE];
 int matrix2[SIZE][SIZE];
@@ -55,14 +55,18 @@ int main(int argc, char *argv[]) {
 	
 	srand(time(NULL));	
 	init_matrix();
-//	print_matrix(matrix1);
-//	print_matrix(matrix2);
-//	print_matrix(matrix3);
-	// time
-	multiply_regular();
-	// end time		
+
+	struct timespec start_time;
+	struct timespec end_time;
 	
-	print_matrix(matrix3);
+	gettimeofday(&start_time, NULL);
+	multiply_regular();
+	gettimeofday(&end_time, NULL);
+
+	printf("%ld\n", ((end_time.tv_sec * 1000000000 + end_time.tv_nsec) - (start_time.tv_sec * 1000000000 + start_time.tv_nsec)));
+	
+		
+//	print_matrix(matrix3);
 
 	return 1;
 }

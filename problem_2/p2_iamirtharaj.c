@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <time.h>
 #include <math.h>
 #define SIZE 1024
 
-int a[SIZE][SIZE];
-int b[SIZE][SIZE];
-
-int c[SIZE][SIZE];
+uint8_t a[SIZE][SIZE];
+uint8_t b[SIZE][SIZE];
+uint8_t c[SIZE][SIZE];
 
 void init_matrix() {
 	int i = 0;
@@ -37,13 +37,15 @@ void multiply_tiling(int block) {
 	int p = SIZE;
 	int m = SIZE;
 
-	for (int i = 0; i < n; i+=block) {
-		for (int j = 0; j < p; j+=block) {
-			for (int k = 0; k < m; k+=block) {
-				for (int ii = i; ii < min(i + block, n); ii++) {
-					for (int jj = j; jj < min(j+block, p); jj++) {
+    int i, j, k, ii, jj, kk;
+
+	for (i = 0; i < n; i+=block) {
+		for (j = 0; j < p; j+=block) {
+			for (k = 0; k < m; k+=block) {
+				for (ii = i; ii < min(i + block, n); ii++) {
+					for (jj = j; jj < min(j+block, p); jj++) {
 						int sum = 0;
-						for (int kk = k; kk < min(k+block, m); kk++) {
+						for (kk = k; kk < min(k+block, m); kk++) {
 							int temp = a[ii][kk] * b[kk][jj];
 							sum+=temp;
 						}
@@ -56,11 +58,13 @@ void multiply_tiling(int block) {
 }
 
 void multiply_regular() {
+
+    int i, j, k;
 	
-	for (int i = 0; i < SIZE; i++) {
-		for (int j = 0; j < SIZE; j++) {       
+	for (i = 0; i < SIZE; i++) {
+		for (j = 0; j < SIZE; j++) {       
 			int sum = 0;
- 			for (int k = 0; k < SIZE; k++) {
+ 			for (k = 0; k < SIZE; k++) {
 				sum = sum + a[i][k]*b[k][j];        
 			}       
 			c[i][j] = sum;      
@@ -81,7 +85,7 @@ void print_matrix(int matrix[SIZE][SIZE]) {
 }
 
 int main(int argc, char *argv[]) {
-	
+
 	if (argc < 2) {
 		printf("Please enter a tiling size\n");
 		return 0;

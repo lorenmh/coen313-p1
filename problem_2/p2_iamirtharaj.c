@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#define SIZE 4
+#define SIZE 1024
 
 int a[SIZE][SIZE];
 int b[SIZE][SIZE];
@@ -82,24 +82,31 @@ void print_matrix(int matrix[SIZE][SIZE]) {
 
 int main(int argc, char *argv[]) {
 	
+	if (argc < 2) {
+		printf("Please enter a tiling size\n");
+		return 0;
+	}
+
+	int tiling_size = atoi(argv[1]);
+
 	srand(time(NULL));	
 	init_matrix();
 
-	struct timespec start_time;
-	struct timespec end_time;
+	struct timeval start_time;
+	struct timeval end_time;
 	
-//	gettimeofday(&start_time, NULL);
-//	multiply_regular();
-	multiply_tiling(2);
-//	gettimeofday(&end_time, NULL);
-	print_matrix(a);
-	printf("\n");
-	print_matrix(b);
-	printf("\n");
-	print_matrix(c);
+	gettimeofday(&start_time, NULL);
+	multiply_tiling(tiling_size);
+	gettimeofday(&end_time, NULL);
+	
+	long elapsed = ((end_time.tv_sec * 1000000 + end_time.tv_usec) - (start_time.tv_sec * 1000000 + start_time.tv_usec));
 
-	multiply_regular();
+
+//	print_matrix(a);
 	printf("\n");
-	print_matrix(c);
+//	print_matrix(b);
+	printf("\n");
+	//print_matrix(c);
+	printf("\n The amount of time it takes for a tiling size of %d is %ld\n", tiling_size, elapsed);
 	return 1;
 }
